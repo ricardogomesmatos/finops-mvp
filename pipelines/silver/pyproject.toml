@@ -1,0 +1,24 @@
+[project]
+name = "silver-pipeline"
+version = "0.1.0"
+description = "Camada Silver do medalhão moderno (gcp_labels) — aplica labels de negócio sobre o billing raw do GCP."
+requires-python = ">=3.12"
+dependencies = [
+    "billing-common",
+    "jinja2>=3.1,<4",
+]
+
+[tool.uv.sources]
+billing-common = { workspace = true }
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/silver_pipeline"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3,<9",
+]

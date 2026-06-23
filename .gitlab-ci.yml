@@ -1,0 +1,57 @@
+image: python:3.12-slim
+
+stages:
+  - lint
+  - test
+
+default:
+  tags:
+    - gcp-shared-runner
+
+variables:
+  UV_CACHE_DIR: "$CI_PROJECT_DIR/.uv-cache"
+
+.uv-base:
+  before_script:
+    - pip install --upgrade uv
+    - uv sync --all-packages
+  cache:
+    key:
+      files:
+        - uv.lock
+    paths:
+      - .uv-cache/
+
+# Stage: lint
+# Ruff é bloqueante (lint + format). mypy roda em modo permissivo e não
+# bloqueia o pipeline nesta entrega — trava regressão futura sem travar esta
+# entrega por causa de stubs incompletos de libs do GCP.
+ruff-check:
+  extends: .uv-base
+  stage: lint
+  script:
+    - uv run ruff check .
+    - uv run ruff format --check .
+
+mypy-check:
+  extends: .uv-base
+  stage: lint
+  allow_failure: true
+  script:
+    - uv run mypy libs pipelines
+
+# Stage: test
+# Jobs separados por pacote do workspace — paridade com o padrão do legado
+# (um job de teste por Cloud Function/pipeline), mas usando uv em vez de
+# pip install -r requirements_test.txt + unittest discover.
+pytest-billing-common:
+  extends: .uv-base
+  stage: test
+  script:
+    - uv run pytest libs/billing_common/tests -v
+
+pytest-silver-pipeline:
+  extends: .uv-base
+  stage: test
+  script:
+    - uv run pytest pipelines/silver/tests -v
