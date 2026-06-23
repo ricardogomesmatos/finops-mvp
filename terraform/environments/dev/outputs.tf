@@ -1,11 +1,4 @@
-output "oci_recommendations_runner_id" {
-  value = module.oci_recommendations_runner.id
-}
-
-output "oci_recommendations_table_id" {
-  value = module.oci_recommendations_table.id
-}
-
-output "oci_recommendations_secret_id" {
-  value = module.oci_recommendations_secret.secret_id
-}
+# Vazio por enquanto: nenhum módulo é instanciado neste ambiente. Ao adicionar
+# o primeiro módulo (ex.: deploy das camadas do medalhão), exportar aqui os
+# IDs/URLs úteis — nunca deixar output órfão sem motivo (ver débito técnico #6
+# do legado em CLAUDE.md).

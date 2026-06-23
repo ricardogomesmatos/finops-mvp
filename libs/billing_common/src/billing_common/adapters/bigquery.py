@@ -110,6 +110,21 @@ class BigQueryAdapter:
             )
             return None
 
+    def insert_rows(
+        self,
+        project: str,
+        dataset: str,
+        table_id: str,
+        rows: list[dict],
+    ) -> list[dict]:
+        """Insere linhas via streaming insert (`insertAll`), append-only.
+
+        Usado por pipelines de snapshot raw que não fazem DDL/MERGE — apenas
+        gravação append-only de cada extração.
+        """
+        table_ref = f"{project}.{dataset}.{table_id}"
+        return self.client.insert_rows_json(table_ref, rows)
+
     def get_table(self, project: str, dataset: str, table_id: str) -> bigquery.Table:
         dataset_ref = bigquery.DatasetReference(project, dataset)
         table_ref = bigquery.Table(dataset_ref.table(table_id))

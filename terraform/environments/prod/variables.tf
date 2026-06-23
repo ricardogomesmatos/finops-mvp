@@ -21,14 +21,3 @@ variable "service_account_email" {
   description = "Service Account existente reaproveitada pelos pipelines de billing em prod."
   default     = "sa-gcp-billing-prd@gglobo-billing-hdg-prd.iam.gserviceaccount.com"
 }
-
-variable "oci_tenancy_id" {
-  type        = string
-  description = "OCID da tenancy OCI usada como escopo da extração de recomendações (compartment_id_in_subtree=True)."
-}
-
-variable "oci_credentials_secret_id" {
-  type        = string
-  description = "Nome do secret no Secret Manager com as credenciais de API Key da OCI."
-  default     = "oci-optimizer-credentials"
-}

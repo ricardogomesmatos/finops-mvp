@@ -11,14 +11,16 @@ Repositório destino da modernização do ambiente legado **`gcp-billing`** (con
 A prioridade é a arquitetura medalhão de **5 camadas** do pipeline moderno `gcp_labels`:
 
 ```
-silver_label (gcp_billing_silver_label)
-  → gold_pre_foundation (tb_gcp_gold_pre_foundation)
-  → gold_foundation (tb_gcp_billing_foundation_labels[_dashboard])
-  → gold (tb_gcp_billing_projeto_ar_label)
-  → unificado (tb_gcp_tsuru_dbaas_unificada_labels)
+silver_label (gcp_billing_silver_label)            -- migrado: pipelines/silver
+  → gold_pre_foundation (tb_gcp_gold_pre_foundation) -- migrado: pipelines/gold_pre_foundation
+  → gold_foundation (tb_gcp_billing_foundation_labels[_dashboard]) -- migrado: pipelines/gold_foundation
+  → gold (tb_gcp_billing_projeto_ar_label)           -- migrado: pipelines/gold
+  → unificado (tb_gcp_tsuru_dbaas_unificada_labels)  -- migrado: pipelines/unificado
 ```
 
-Deploy real: Cloud Function `gcp-cost-with-labels` (Gen2), disparada diariamente via `gcp-workflow-labels-trigger` + Cloud Scheduler. Já provisionada em dev e prod.
+As 5 camadas têm código Python migrado (services + templates SQL + testes), com paridade comportamental confirmada por leitura do legado. **Ainda fora de escopo**: Terraform de deploy (Cloud Function/Cloud Run + Scheduler) para essas 5 camadas, dual-run/reconciliação real contra produção (gate do `qa-reconciliation`) e cutover do orquestrador (`gcp_labels/main.py`) — o novo repositório não replica esse orquestrador único ainda, cada camada tem um `main.py` próprio e independente (ver READMEs de cada `pipelines/<camada>/`).
+
+Deploy real do legado: Cloud Function `gcp-cost-with-labels` (Gen2), disparada diariamente via `gcp-workflow-labels-trigger` + Cloud Scheduler. Já provisionada em dev e prod.
 
 **Fora de prioridade** (não migrar a menos que pedido explicitamente): a tabela `billing_silver.gcp_billing_silver` (sem `_label`) e o pipeline legado `gcp_raw_to_silver` → `gcp_silver_to_gold` → `gcp_gold_to_month`, orquestrado via Cloud Workflows (`workflow/workflow_gcp.yaml`) e só provisionado em prod. Tratar como candidato a descontinuação após confirmar ausência de consumidores.
 

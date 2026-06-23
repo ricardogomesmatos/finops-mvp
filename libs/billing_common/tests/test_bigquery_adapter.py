@@ -108,6 +108,27 @@ def test_update_table_schema_if_necessary_returns_none_on_failure(mock_bq_client
     assert result is None
 
 
+def test_insert_rows_delegates_to_client_insert_rows_json(mock_bq_client):
+    adapter = BigQueryAdapter(project_id="my-project")
+    mock_bq_client.insert_rows_json.return_value = []
+
+    result = adapter.insert_rows("my-project", "billing_raw", "tb_test", [{"a": 1}])
+
+    assert result == []
+    mock_bq_client.insert_rows_json.assert_called_once_with(
+        "my-project.billing_raw.tb_test", [{"a": 1}]
+    )
+
+
+def test_insert_rows_returns_errors_from_client(mock_bq_client):
+    adapter = BigQueryAdapter(project_id="my-project")
+    mock_bq_client.insert_rows_json.return_value = [{"index": 0, "errors": ["bad"]}]
+
+    result = adapter.insert_rows("my-project", "billing_raw", "tb_test", [{"a": 1}])
+
+    assert result == [{"index": 0, "errors": ["bad"]}]
+
+
 def test_get_table_delegates_to_client(mock_bq_client):
     adapter = BigQueryAdapter(project_id="my-project")
     mock_bq_client.get_table.return_value = "table-obj"
