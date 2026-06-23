@@ -1,0 +1,5 @@
+# Copie para terraform.tfvars e ajuste. NUNCA versionar terraform.tfvars real
+# se contiver valores sensíveis (este aqui só tem o OCID da tenancy, que não é
+# segredo, mas siga a convenção mesmo assim).
+
+oci_tenancy_id = "ocid1.tenancy.oc1..exampleuniqueID"

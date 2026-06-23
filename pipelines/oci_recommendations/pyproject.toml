@@ -1,0 +1,24 @@
+[project]
+name = "oci-recommendations-pipeline"
+version = "0.1.0"
+description = "Extração das recomendações de otimização (OCI Optimizer/Cloud Advisor) da tenancy OCI para billing_raw no BigQuery."
+requires-python = ">=3.12"
+dependencies = [
+    "billing-common",
+    "oci>=2.135,<3",
+]
+
+[tool.uv.sources]
+billing-common = { workspace = true }
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/oci_recommendations_pipeline"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3,<9",
+]
