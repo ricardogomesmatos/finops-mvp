@@ -213,3 +213,4 @@ cobertura nos demais pacotes.
 | [`docs/TROUBLESHOOTING.md`](docs/TROUBLESHOOTING.md) | Catálogo de problemas conhecidos e monitoramento |
 | [`docs/RUNBOOK.md`](docs/RUNBOOK.md) | Runbooks de incidente por cenário |
 | [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) | Processo de deploy real vs. fora de escopo |
+| [`docs/TERRAFORM.md`](docs/TERRAFORM.md) | Terraform 101 — conceitos do zero, tour pelos módulos e comandos seguros para quem nunca usou Terraform |
